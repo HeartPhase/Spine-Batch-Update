@@ -61,19 +61,19 @@
         <!--#endregion-->
     </Page.Resources>
 
-    <Grid Margin="60, 32, 60, 12" ColumnSpacing="60" RowSpacing="8">
+    <Grid Margin="60, 32, 60, 12" ColumnSpacing="60" RowSpacing="4">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="4*"/>
+            <RowDefinition Height="5*"/>
             <RowDefinition Height="20*"/>
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row ="0" Grid.ColumnSpan="2" x:Name="titleText" Text="Spine Batch Upgrader" Style="{StaticResource TextBlock_title}"/>
-        <StackPanel Grid.Column="0" Grid.Row ="1" x:Name="pathInOut" Orientation="Vertical" Style="{StaticResource StackPanel_vertical}">
+        <StackPanel Grid.Column="0" Grid.Row ="1" Spacing="4" x:Name="pathInOut" Orientation="Vertical" Style="{StaticResource StackPanel_vertical}">
             <Grid x:Name="pathIn" ColumnSpacing="8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -91,6 +91,14 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" x:Name="chooseFolder_Button_Export" Content="Export To" Click="ChooseFolder_Click_Export" Style="{StaticResource Button_normal}"/>
                 <TextBox Grid.Column="1" x:Name="folderPath_Export"/>
+            </Grid>
+            <Grid x:Name="chooseJSON" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="chooseFile_Button_JSON" Content="Config" Click="ChooseFile_Click_JSON" Style="{StaticResource Button_normal}"/>
+                <TextBox Grid.Column="1" x:Name="filePath_JSON"/>
             </Grid>
         </StackPanel>
         <TreeView Grid.Column="0" Grid.Row ="2" x:Name="treeView" SelectionMode="Multiple" Style="{StaticResource TreeView_main}" ItemTemplateSelector="{StaticResource treeTempSelector}">

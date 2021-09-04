@@ -22,15 +22,20 @@ namespace SpineBatchUpdate
     {
         static SpineTreeView dataSource;
         static FolderPicker fp;
+        static FileOpenPicker op;
 
         public MainPage()
         {
             this.InitializeComponent();
+
             fp = new FolderPicker();
             fp.SuggestedStartLocation = PickerLocationId.ComputerFolder;
             fp.FileTypeFilter.Add(".spine");
 
+            op = new FileOpenPicker();
+            op.FileTypeFilter.Add(".json");
             WinRT.Interop.InitializeWithWindow.Initialize(fp, MainWindow.m_hwnd);
+            WinRT.Interop.InitializeWithWindow.Initialize(op, MainWindow.m_hwnd);
         }
 
         #region UI Events
@@ -38,11 +43,18 @@ namespace SpineBatchUpdate
         private async void ChooseFolder_Click_Import(object sender, RoutedEventArgs e) {
             StorageFolder folder = await fp.PickSingleFolderAsync();
             if (folder != null) folderPath_Import.Text = folder.Path;
+            SpineUpdateUtility.LogUpdated -= LogUpdatedHandler;
         }
 
         private async void ChooseFolder_Click_Export(object sender, RoutedEventArgs e) {
             StorageFolder folder = await fp.PickSingleFolderAsync();
             if (folder != null) folderPath_Export.Text = folder.Path;
+        }
+
+        private async void ChooseFile_Click_JSON(object sender, RoutedEventArgs e) {
+            //StorageFile file = await op.PickSingleFileAsync();
+            StorageFile file = await op.PickSingleFileAsync();
+            if (file != null) filePath_JSON.Text = file.Path;
         }
 
         private void ProcessPath_Click_Import(object sender, RoutedEventArgs e)
@@ -61,14 +73,8 @@ namespace SpineBatchUpdate
                 SpineItemView item = (SpineItemView)node.Content;
                 if (!item.IsFolder) spineFilePaths.Add(item.SpineTreeItem.ItemPath);
             }
-
-            List<string> log = SpineUpdateUtility.UpdateSpineFiles(spineFilePaths);
-
-            //DEBUG
-            foreach (string logRecord in log)
-            {
-                logs.Text += (logRecord + "\n");
-            }
+            SpineUpdateUtility.LogUpdated += LogUpdatedHandler;
+            SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text);
         }
 
         private void ExportLogs_Click(object sender, RoutedEventArgs e) { 
@@ -78,6 +84,11 @@ namespace SpineBatchUpdate
         #endregion
 
         #region Non-UI
+
+        private void LogUpdatedHandler(object sender, EventArgs e) {
+            LogUpdatedEventArgs _e = (LogUpdatedEventArgs)e;
+            logs.Text += (_e.newLog + "\n");
+        }
 
         private void RefreshTreeView() {
             TreeViewNode rootNode = GenerateNode(dataSource.RootFolder);

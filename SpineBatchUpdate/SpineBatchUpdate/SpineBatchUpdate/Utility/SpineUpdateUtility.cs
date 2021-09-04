@@ -8,16 +8,34 @@ namespace SpineBatchUpdate.Utility
 {
     public static class SpineUpdateUtility
     {
-        static List<string> log = new();
+        public static EventHandler LogUpdated = delegate { };
 
-        public static List<string> UpdateSpineFiles(List<string> spineFiles) {
-            log.Clear();
+        public static async void UpdateSpineFiles(List<string> spineFiles, string root, string export, string config) {
+            CommandLineUtility clu = new CommandLineUtility();
             foreach (string spineFile in spineFiles)
             {
-                log.Add(spineFile);
+                string relativePath = spineFile[root.Length..];
+                string fileName = relativePath.Split("\\").Last();
+                relativePath = relativePath[..relativePath.IndexOf(fileName)];
+                string command = "Spine -i "
+                    + spineFile
+                    + " -o "
+                    + export + relativePath
+                    + " -e "
+                    + config;
+                string log = await clu.RunCommand(command);
+                LogUpdated.Invoke(null, new LogUpdatedEventArgs(log));
             }
-            return log;
         }
+    }
 
+    public class LogUpdatedEventArgs : EventArgs
+    {
+        public string newLog;
+
+        public LogUpdatedEventArgs(string _newLog)
+        {
+            newLog = _newLog;
+        }
     }
 }
