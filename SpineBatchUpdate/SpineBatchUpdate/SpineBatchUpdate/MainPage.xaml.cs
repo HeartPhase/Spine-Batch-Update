@@ -15,45 +15,76 @@ using SpineBatchUpdate.Utility;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using System.Collections.ObjectModel;
+
 namespace SpineBatchUpdate
 {
     public sealed partial class MainPage : Page
     {
         static SpineTreeView dataSource;
+        static FolderPicker fp;
 
         public MainPage()
         {
             this.InitializeComponent();
-        }
-
-        private void TestButton_Click(object sender, RoutedEventArgs e)
-        {
-            titleText.Text = "Clicked";
-        }
-
-        private async void ImportButton_Click(object sender, RoutedEventArgs e)
-        {
-            folderPath.Text = "";
-            FolderPicker fp = new FolderPicker();
+            fp = new FolderPicker();
             fp.SuggestedStartLocation = PickerLocationId.ComputerFolder;
             fp.FileTypeFilter.Add(".spine");
 
             WinRT.Interop.InitializeWithWindow.Initialize(fp, MainWindow.m_hwnd);
+        }
+
+        #region UI Events
+
+        private async void ChooseFolder_Click_Import(object sender, RoutedEventArgs e) {
             StorageFolder folder = await fp.PickSingleFolderAsync();
-            if (folder != null)
+            if (folder != null) folderPath_Import.Text = folder.Path;
+        }
+
+        private async void ChooseFolder_Click_Export(object sender, RoutedEventArgs e) {
+            StorageFolder folder = await fp.PickSingleFolderAsync();
+            if (folder != null) folderPath_Export.Text = folder.Path;
+        }
+
+        private void ProcessPath_Click_Import(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(folderPath_Import.Text)) {
+                dataSource = new SpineTreeView(SpineTreeGen.GenerateTreeFromPath(folderPath_Import.Text));
+            }
+            RefreshTreeView();
+        }
+
+        private void ProcessAction_Click(object sender, RoutedEventArgs e) {
+            logs.Text = "";
+            List<string> spineFilePaths = new();
+            foreach (TreeViewNode node in treeView.SelectedNodes)
             {
-                folderPath.Text = SpineTreeGen.GenerateTreeFromPath(folder.Path).ToString();
-                dataSource = new SpineTreeView(SpineTreeGen.GenerateTreeFromPath(folder.Path));
-                RefreshTreeView();
+                SpineItemView item = (SpineItemView)node.Content;
+                if (!item.IsFolder) spineFilePaths.Add(item.SpineTreeItem.ItemPath);
+            }
+
+            List<string> log = SpineUpdateUtility.UpdateSpineFiles(spineFilePaths);
+
+            //DEBUG
+            foreach (string logRecord in log)
+            {
+                logs.Text += (logRecord + "\n");
             }
         }
+
+        private void ExportLogs_Click(object sender, RoutedEventArgs e) { 
+            
+        }
+
+        #endregion
+
+        #region Non-UI
 
         private void RefreshTreeView() {
             TreeViewNode rootNode = GenerateNode(dataSource.RootFolder);
             foreach (SpineItemView item in dataSource.RootFolder.Children)
             {
                 TreeViewNode node = GenerateNode(item);
-                if (item.IsFolder && item.Children.Count > 0) AddChildrenToTreeNode(node);
+                if (item.IsFolder && item.Children.Count > 0) AddChildrenToTreeNode(item, node);
                 rootNode.Children.Add(node);
             }
             treeView.RootNodes.Clear();
@@ -67,13 +98,30 @@ namespace SpineBatchUpdate
             return node;
         }
 
-        private void AddChildrenToTreeNode(TreeViewNode node) {
-            foreach (SpineItemView item in ((SpineItemView)node.Content).Children)
+        private void AddChildrenToTreeNode(SpineItemView item, TreeViewNode node) {
+            foreach (SpineItemView child in item.Children)
             {
-                TreeViewNode childNode = GenerateNode(item);
-                if (item.IsFolder && item.Children.Count > 0) AddChildrenToTreeNode(childNode);
+                TreeViewNode childNode = GenerateNode(child);
+                if (child.IsFolder && child.Children.Count > 0) AddChildrenToTreeNode(child, childNode);
                 node.Children.Add(childNode);
             }
+        }
+
+        #endregion
+    }
+
+    public class TreeTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate FolderTemp { get; set; }
+
+        public DataTemplate FileTemp { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            TreeViewNode node = (TreeViewNode)item;
+            SpineItemView spineItemView = (SpineItemView)node.Content;
+
+            return spineItemView.IsFolder ? FolderTemp : FileTemp;
         }
     }
 }

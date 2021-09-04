@@ -25,6 +25,7 @@ namespace SpineBatchUpdate.Utility
         static SpineItem BuildSpineItem(FileInfo fileInfo) {
             SpineItem item = new SpineItem(fileInfo.Name);
             item.IsFolder = false;
+            item.ItemPath = fileInfo.FullName;
             return item;
         }
 
@@ -67,11 +68,11 @@ namespace SpineBatchUpdate.Utility
             if (directories != null) {
                 foreach (DirectoryInfo dirInfo in directories)
                 {
-                    item.Children.Add(SearchFolder(dirInfo));
-
+                    SpineItem spineFolder = SearchFolder(dirInfo);
+                    if (spineFolder.Children.Count > 0)
+                    item.Children.Add(spineFolder);
                 }
             }
-
             return item;
         }
     }

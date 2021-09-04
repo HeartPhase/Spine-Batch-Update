@@ -29,6 +29,10 @@ namespace SpineBatchUpdate
                 );
         }
 
+        public string IconPath {
+            get => isFolder ? "Assets/folder.png" : "Assets/file.png";
+        }
+
         public SpineItemView Parent
         {
             get => parent;
@@ -37,6 +41,10 @@ namespace SpineBatchUpdate
         public ObservableCollection<SpineItemView> Children
         {
             get => children;
+        }
+
+        public SpineItem SpineTreeItem {
+            get => spineTreeItem;
         }
 
         public string DisplayName { get => spineTreeItem.DisplayName; }
@@ -69,7 +77,7 @@ namespace SpineBatchUpdate
             }
         }
 
-        public bool IsFolder { get; set; }
+        public bool IsFolder { get => isFolder; set => isFolder = value; }
 
         public bool NameContainsText(string text)
         {

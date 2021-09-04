@@ -6,21 +6,109 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-    
-    <RelativePanel>
-        <TextBlock x:Name="titleText" Text="Spine Batch Upgrader" Margin="0, 10, 0, 10"/>
-        <Button x:Name="testButton" Content="Test button" Click="TestButton_Click" RelativePanel.Below="titleText" Margin="0, 10, 0, 10"/>
-        <ScrollViewer x:Name="treeScroll" RelativePanel.Below="testButton" Background="MediumVioletRed" MinHeight="600" MinWidth="360" Margin="0, 10, 0, 10">
-            <TreeView x:Name="treeView" SelectionMode="Multiple" MinHeight="560" MinWidth="320" Background="Aqua">
-                <TreeView.ItemTemplate>
-                    <DataTemplate x:DataType="TreeViewNode">
-                        <TextBlock Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
-                    </DataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>
-        </ScrollViewer>
-        <Button x:Name="ImportButton" Content="Select Folder" RelativePanel.RightOf="treeScroll" Margin="0, 10, 0, 10" Click="ImportButton_Click"/>
-        <TextBlock x:Name="folderPath" Text="" RelativePanel.Below="ImportButton" RelativePanel.RightOf="treeScroll" Margin="0, 10, 0, 10"/>
-    </RelativePanel>
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush }">
+    <Page.Resources>
+        <!--#region Stylesheet -->
+        <Style x:Key="TextBlock_title" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="TextBox_path" TargetType="TextBox">
+        </Style>
+        <Style x:Key="Button_normal" TargetType="Button">
+            <Setter Property="Width" Value="110"/>
+        </Style>
+        <Style x:Key="Button_action" TargetType="Button" BasedOn="{StaticResource Button_normal}">
+            <Setter Property="Background" Value="{ThemeResource SystemAccentColorLight2}"/>
+        </Style>
+        <Style x:Key="StackPanel_common" TargetType="StackPanel">
+            <Setter Property="Spacing" Value="12"/>
+        </Style>
+        <Style x:Key="StackPanel_horizontal" TargetType="StackPanel" BasedOn="{StaticResource StackPanel_common}">
+        </Style>
+        <Style x:Key="StackPanel_vertical" TargetType="StackPanel" BasedOn="{StaticResource StackPanel_common}">
+        </Style>
+        <Style x:Key="TreeView_main" TargetType="TreeView">
+            <Setter Property="Background" Value="{ThemeResource SolidBackgroundFillColorBase}"/>
+        </Style>
+        <Style x:Key="TextBox_log" TargetType="TextBox">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="AcceptsReturn" Value="True"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="Padding" Value="4, 4, 16, 4"/>
+        </Style>
+
+        <!--#endregion-->
+        
+        <!--#region DataTemplates-->
+        <DataTemplate x:DataType="TreeViewNode" x:Key="folderTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="16" Source="Assets/folder.png"/>
+                <TextBlock Height="20" LineHeight="16" Padding="2" Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:DataType="TreeViewNode" x:Key="fileTemplate">
+            <StackPanel Orientation="Horizontal">
+                <Image Width="16" Source="Assets/file.png"/>
+                <TextBlock Height="20" LineHeight="16" Padding="2" Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
+            </StackPanel>
+        </DataTemplate>
+        <local:TreeTemplateSelector x:Key="treeTempSelector"
+                                    FolderTemp="{StaticResource folderTemplate}"
+                                    FileTemp="{StaticResource fileTemplate}"/>
+
+        <!--#endregion-->
+    </Page.Resources>
+
+    <Grid Margin="60, 32, 60, 12" ColumnSpacing="60" RowSpacing="8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="20*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row ="0" Grid.ColumnSpan="2" x:Name="titleText" Text="Spine Batch Upgrader" Style="{StaticResource TextBlock_title}"/>
+        <StackPanel Grid.Column="0" Grid.Row ="1" x:Name="pathInOut" Orientation="Vertical" Style="{StaticResource StackPanel_vertical}">
+            <Grid x:Name="pathIn" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="chooseFolder_Button_Import" Content="Import From" Click="ChooseFolder_Click_Import" Style="{StaticResource Button_normal}"/>
+                <TextBox Grid.Column="1" x:Name="folderPath_Import" />
+                <Button Grid.Column="2" x:Name="processPath_Button_Import" Content="Import" Click="ProcessPath_Click_Import" Style="{StaticResource Button_normal}"/>
+            </Grid>
+            <Grid x:Name="pathOut" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="chooseFolder_Button_Export" Content="Export To" Click="ChooseFolder_Click_Export" Style="{StaticResource Button_normal}"/>
+                <TextBox Grid.Column="1" x:Name="folderPath_Export"/>
+            </Grid>
+        </StackPanel>
+        <TreeView Grid.Column="0" Grid.Row ="2" x:Name="treeView" SelectionMode="Multiple" Style="{StaticResource TreeView_main}" ItemTemplateSelector="{StaticResource treeTempSelector}">
+        </TreeView>
+        <StackPanel Grid.Column="0" Grid.Row ="3" x:Name="startProgressbar" Orientation="Horizontal" Style="{StaticResource StackPanel_horizontal}">
+            <Button x:Name="processAction" Content="Start" Click="ProcessAction_Click" Style="{StaticResource Button_action}" />
+        </StackPanel>
+
+        <Grid Grid.Column="1" Grid.Row ="0" Grid.RowSpan="3" x:Name="logArea" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" x:Name="logsTitle" Height="24" Text="Logs" HorizontalAlignment="Right" />
+            <TextBox Grid.Row="1" x:Name="logs" Text="Waiting for process.." ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource TextBox_log}"/>
+        </Grid>
+        <StackPanel Grid.Column="1" Grid.Row ="3" x:Name="misc" Orientation="Horizontal" HorizontalAlignment="Right" Style="{StaticResource StackPanel_horizontal}">
+            <Button x:Name="exportLogs" Content="Save Log" Click="ExportLogs_Click" Style="{StaticResource Button_normal}"/>
+        </StackPanel>
+    </Grid>
 </Page>
