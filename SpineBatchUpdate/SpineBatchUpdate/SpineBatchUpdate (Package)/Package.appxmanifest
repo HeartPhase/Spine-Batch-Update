@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="75b09efc-a4a7-439f-9f5a-12498be088d0"
-    Publisher="CN=HeartPhase.Studio"
-    Version="0.1.1.0" />
+    Name="29295HeartPhase.Studio.SpineBatchUpdater"
+    Publisher="CN=C7AA69E5-A500-44A7-B2DA-9CFB7AD5EAB4"
+    Version="0.1.5.0" />
 
   <Properties>
-    <DisplayName>SpineBatchUpdate (Package)</DisplayName>
-    <PublisherDisplayName>ADMIN</PublisherDisplayName>
+    <DisplayName>Spine Batch Updater</DisplayName>
+    <PublisherDisplayName>HeartPhase.Studio</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="SpineBatchUpdate (Package)"
+        DisplayName="Spine Batch Updater"
         Description="SpineBatchUpdate (Package)"
         BackgroundColor="transparent"
         Square150x150Logo="Images\Square150x150Logo.png"

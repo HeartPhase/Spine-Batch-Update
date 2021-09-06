@@ -43,7 +43,7 @@ namespace SpineBatchUpdate
         private async void ChooseFolder_Click_Import(object sender, RoutedEventArgs e) {
             StorageFolder folder = await fp.PickSingleFolderAsync();
             if (folder != null) folderPath_Import.Text = folder.Path;
-            SpineUpdateUtility.LogUpdated -= LogUpdatedHandler;
+            //CommandLineUtility.LogUpdated -= LogUpdatedHandler;
         }
 
         private async void ChooseFolder_Click_Export(object sender, RoutedEventArgs e) {
@@ -73,21 +73,35 @@ namespace SpineBatchUpdate
                 SpineItemView item = (SpineItemView)node.Content;
                 if (!item.IsFolder) spineFilePaths.Add(item.SpineTreeItem.ItemPath);
             }
-            SpineUpdateUtility.LogUpdated += LogUpdatedHandler;
+            //using var watcher = new FileSystemWatcher(folderPath_Export.Text);
+            //watcher.Filter = "*.log";
+            //watcher.Changed += LogUpdatedHandler;
+            //watcher.EnableRaisingEvents = true;
+            //CommandLineUtility.LogUpdated += LogUpdatedHandler;
             SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text);
         }
 
-        private void ExportLogs_Click(object sender, RoutedEventArgs e) { 
-            
+        private void ExportLogs_Click(object sender, RoutedEventArgs e) {
+            string logFile = folderPath_Export.Text + "\\temp.log";
+            string logErrorFile = folderPath_Export.Text + "\\temp_error.log";
+            if (File.Exists(logFile))
+            {
+
+                logs.Text = File.ReadAllText(logFile) + "\n Error Message \n" + File.ReadAllText(logErrorFile);
+            }
         }
 
         #endregion
 
         #region Non-UI
 
-        private void LogUpdatedHandler(object sender, EventArgs e) {
-            LogUpdatedEventArgs _e = (LogUpdatedEventArgs)e;
-            logs.Text += (_e.newLog + "\n");
+        private void LogUpdatedHandler(object sender, FileSystemEventArgs e) {
+            //LogUpdatedEventArgs _e = (LogUpdatedEventArgs)e;
+            //var ignored = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            //{
+            //    logs.Text += (_e.newLog + "\n");
+            //});
+            logs.Text = File.ReadAllText(folderPath_Export.Text + "\\temp.log");
         }
 
         private void RefreshTreeView() {

@@ -116,7 +116,7 @@
             <TextBox Grid.Row="1" x:Name="logs" Text="Waiting for process.." ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource TextBox_log}"/>
         </Grid>
         <StackPanel Grid.Column="1" Grid.Row ="3" x:Name="misc" Orientation="Horizontal" HorizontalAlignment="Right" Style="{StaticResource StackPanel_horizontal}">
-            <Button x:Name="exportLogs" Content="Save Log" Click="ExportLogs_Click" Style="{StaticResource Button_normal}"/>
+            <Button x:Name="exportLogs" Content="Load Log" Click="ExportLogs_Click" Style="{StaticResource Button_normal}"/>
         </StackPanel>
     </Grid>
 </Page>

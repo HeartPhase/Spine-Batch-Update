@@ -8,24 +8,29 @@ namespace SpineBatchUpdate.Utility
 {
     public static class SpineUpdateUtility
     {
-        public static EventHandler LogUpdated = delegate { };
 
-        public static async void UpdateSpineFiles(List<string> spineFiles, string root, string export, string config) {
-            CommandLineUtility clu = new CommandLineUtility();
+        public static void UpdateSpineFiles(List<string> spineFiles, string root, string export, string config) {
+            List<string> commands = new();
             foreach (string spineFile in spineFiles)
             {
                 string relativePath = spineFile[root.Length..];
                 string fileName = relativePath.Split("\\").Last();
                 relativePath = relativePath[..relativePath.IndexOf(fileName)];
-                string command = "Spine -i "
+                string command = "\"E:\\softs\\Spine Trial\\SpineTrial.com\" -i \""
                     + spineFile
-                    + " -o "
-                    + export + relativePath
-                    + " -e "
-                    + config;
-                string log = await clu.RunCommand(command);
-                LogUpdated.Invoke(null, new LogUpdatedEventArgs(log));
+                    + "\" -o \""
+                    + export + relativePath[..(relativePath.Length - 1)]
+                    + "\" -e " + "json";
+                    //+ "\""
+                    //+ config + "\"";
+                //string command = "xcopy \""
+                //    + spineFile
+                //    + "\" \""
+                //    + export + relativePath + "\"";
+                commands.Add(command);
             }
+            commands.Add("exit");
+            CommandLineUtility.RunCommand(commands, export);
         }
     }
 
