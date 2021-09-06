@@ -34,6 +34,8 @@ namespace SpineBatchUpdate
 
             op = new FileOpenPicker();
             op.FileTypeFilter.Add(".json");
+            op.FileTypeFilter.Add(".exe");
+            op.FileTypeFilter.Add(".com");
             WinRT.Interop.InitializeWithWindow.Initialize(fp, MainWindow.m_hwnd);
             WinRT.Interop.InitializeWithWindow.Initialize(op, MainWindow.m_hwnd);
         }
@@ -57,6 +59,11 @@ namespace SpineBatchUpdate
             if (file != null) filePath_JSON.Text = file.Path;
         }
 
+        private async void ChooseFile_Click_Executable(object sender, RoutedEventArgs e) {
+            StorageFile file = await op.PickSingleFileAsync();
+            if (file != null) filePath_Executable.Text = file.Path;
+        }
+
         private void ProcessPath_Click_Import(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(folderPath_Import.Text)) {
@@ -78,7 +85,7 @@ namespace SpineBatchUpdate
             //watcher.Changed += LogUpdatedHandler;
             //watcher.EnableRaisingEvents = true;
             //CommandLineUtility.LogUpdated += LogUpdatedHandler;
-            SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text);
+            SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text, filePath_Executable.Text);
         }
 
         private void ExportLogs_Click(object sender, RoutedEventArgs e) {

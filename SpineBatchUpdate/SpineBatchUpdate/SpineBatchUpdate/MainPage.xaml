@@ -103,9 +103,16 @@
         </StackPanel>
         <TreeView Grid.Column="0" Grid.Row ="2" x:Name="treeView" SelectionMode="Multiple" Style="{StaticResource TreeView_main}" ItemTemplateSelector="{StaticResource treeTempSelector}">
         </TreeView>
-        <StackPanel Grid.Column="0" Grid.Row ="3" x:Name="startProgressbar" Orientation="Horizontal" Style="{StaticResource StackPanel_horizontal}">
-            <Button x:Name="processAction" Content="Start" Click="ProcessAction_Click" Style="{StaticResource Button_action}" />
-        </StackPanel>
+        <Grid Grid.Column="0" Grid.Row ="3" x:Name="pathExecutable" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" x:Name="chooseFile_Button_Executable" Content="Spine Exe" Click="ChooseFile_Click_Executable" Style="{StaticResource Button_normal}"/>
+            <TextBox Grid.Column="1" x:Name="filePath_Executable" Height="24"/>
+            <Button Grid.Column="2" x:Name="processAction" Content="Start" Click="ProcessAction_Click" Style="{StaticResource Button_action}" />
+        </Grid>
 
         <Grid Grid.Column="1" Grid.Row ="0" Grid.RowSpan="3" x:Name="logArea" >
             <Grid.RowDefinitions>
