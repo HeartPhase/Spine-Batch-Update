@@ -80,11 +80,6 @@ namespace SpineBatchUpdate
                 SpineItemView item = (SpineItemView)node.Content;
                 if (!item.IsFolder) spineFilePaths.Add(item.SpineTreeItem.ItemPath);
             }
-            //using var watcher = new FileSystemWatcher(folderPath_Export.Text);
-            //watcher.Filter = "*.log";
-            //watcher.Changed += LogUpdatedHandler;
-            //watcher.EnableRaisingEvents = true;
-            //CommandLineUtility.LogUpdated += LogUpdatedHandler;
             SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text, filePath_Executable.Text);
         }
 
@@ -93,8 +88,7 @@ namespace SpineBatchUpdate
             string logErrorFile = folderPath_Export.Text + "\\temp_error.log";
             if (File.Exists(logFile))
             {
-
-                logs.Text = File.ReadAllText(logFile) + "\n Error Message \n" + File.ReadAllText(logErrorFile);
+                logs.Text = File.ReadAllText(logFile); //+ "\n Error Message \n" + File.ReadAllText(logErrorFile);
             }
         }
 
