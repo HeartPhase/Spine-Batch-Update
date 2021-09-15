@@ -12,8 +12,8 @@ namespace SpineBatchUpdate.Utility
     {
         public static List<string> SpineUpdateLogFormatter(string logFile) {
             List<string> formatted = new();
-            string currentCmd=;
-            string currentError;
+            string currentCmd = string.Empty;
+            string currentError = string.Empty;
 
             Regex rxError = new Regex(@"^ERROR: *", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             Regex rxCmd = new Regex(@"^[a-z]:\\*>*", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -23,8 +23,11 @@ namespace SpineBatchUpdate.Utility
                 string[] logs = File.ReadAllText(logFile).Split(Environment.NewLine);
                 foreach (string log in logs)
                 {
+                    if (rxCmd.IsMatch(log)) {
+                        currentCmd = log;
+                    }
                     if (rxError.IsMatch(log)) { 
-                    
+                        
                     }
                 }
             }
