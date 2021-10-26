@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SpineBatchUpdate (Package)", "SpineBatchUpdate\SpineBatchUpdate (Package)\SpineBatchUpdate (Package).wapproj", "{7E2C8AFC-0F5B-4FD9-BBD4-EE859FABE70E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpineBatchUpdate", "SpineBatchUpdate\SpineBatchUpdate\SpineBatchUpdate.csproj", "{474E30DE-E7EC-447B-9CA8-340501D31558}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpineBatchUpdate", "SpineBatchUpdate\SpineBatchUpdate\SpineBatchUpdate.csproj", "{474E30DE-E7EC-447B-9CA8-340501D31558}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
