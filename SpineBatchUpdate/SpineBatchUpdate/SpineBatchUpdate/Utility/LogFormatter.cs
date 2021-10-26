@@ -23,9 +23,11 @@ namespace SpineBatchUpdate.Utility
                 string[] logs = File.ReadAllText(logFile).Split(Environment.NewLine);
                 foreach (string log in logs)
                 {
-                    if (rxCmd.IsMatch(log)) currentCmd = log;
+                    if (rxCmd.IsMatch(log)) {
+                        currentCmd = log;
+                    }
                     if (rxError.IsMatch(log)) { 
-                    
+                        
                     }
                 }
             }
