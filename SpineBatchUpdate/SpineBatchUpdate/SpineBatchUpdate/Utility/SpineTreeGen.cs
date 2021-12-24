@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace SpineBatchUpdate.Utility
@@ -11,25 +8,29 @@ namespace SpineBatchUpdate.Utility
     {
         static List<string> log = new();
 
-        public static SpineItem GenerateTreeFromPath(string path) {
+        public static SpineItem GenerateTreeFromPath(string path)
+        {
             DirectoryInfo root = GetFolderByPath(path);
             return SearchFolder(root);
         }
 
-        static SpineItem BuildSpineItem(DirectoryInfo dirInfo) {
+        static SpineItem BuildSpineItem(DirectoryInfo dirInfo)
+        {
             SpineItem item = new SpineItem(dirInfo.Name);
             item.IsFolder = true;
             return item;
         }
 
-        static SpineItem BuildSpineItem(FileInfo fileInfo) {
+        static SpineItem BuildSpineItem(FileInfo fileInfo)
+        {
             SpineItem item = new SpineItem(fileInfo.Name);
             item.IsFolder = false;
             item.ItemPath = fileInfo.FullName;
             return item;
         }
 
-        static DirectoryInfo GetFolderByPath(string path) {
+        static DirectoryInfo GetFolderByPath(string path)
+        {
             DirectoryInfo di = null;
             try
             {
@@ -42,7 +43,8 @@ namespace SpineBatchUpdate.Utility
             return di;
         }
 
-        static SpineItem SearchFolder(DirectoryInfo root) {
+        static SpineItem SearchFolder(DirectoryInfo root)
+        {
             FileInfo[] files = null;
             DirectoryInfo[] directories = null;
 
@@ -56,7 +58,8 @@ namespace SpineBatchUpdate.Utility
                 log.Add(e.Message);
             }
 
-            if (files != null) {
+            if (files != null)
+            {
                 foreach (FileInfo fileInfo in files)
                 {
                     item.Children.Add(BuildSpineItem(fileInfo));
@@ -65,12 +68,13 @@ namespace SpineBatchUpdate.Utility
 
             directories = root.GetDirectories();
 
-            if (directories != null) {
+            if (directories != null)
+            {
                 foreach (DirectoryInfo dirInfo in directories)
                 {
                     SpineItem spineFolder = SearchFolder(dirInfo);
                     if (spineFolder.Children.Count > 0)
-                    item.Children.Add(spineFolder);
+                        item.Children.Add(spineFolder);
                 }
             }
             return item;

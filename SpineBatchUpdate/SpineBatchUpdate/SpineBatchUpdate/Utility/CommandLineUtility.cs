@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
@@ -28,7 +25,8 @@ namespace SpineBatchUpdate.Utility
             cmd.Start();
         }
 
-        public static void RunCommand(List<string> rawCommands, string export) {
+        public static void RunCommand(List<string> rawCommands, string export)
+        {
             initCMD();
             logFile = export + "\\" + "temp" + ".log";
             logErrorFile = export + "\\" + "temp_error" + ".log";
@@ -45,7 +43,8 @@ namespace SpineBatchUpdate.Utility
             cmd.WaitForExit();
         }
 
-        static void OutputHandler(object sender, DataReceivedEventArgs e) {
+        static void OutputHandler(object sender, DataReceivedEventArgs e)
+        {
             WriteData(logFile, e.Data);
             //LogUpdated.Invoke(null, new LogUpdatedEventArgs(e.Data)); 
             //logs += e.Data;

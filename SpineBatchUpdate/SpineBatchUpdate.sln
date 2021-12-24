@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31624.102
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SpineBatchUpdate (Package)", "SpineBatchUpdate\SpineBatchUpdate (Package)\SpineBatchUpdate (Package).wapproj", "{7E2C8AFC-0F5B-4FD9-BBD4-EE859FABE70E}"
 EndProject

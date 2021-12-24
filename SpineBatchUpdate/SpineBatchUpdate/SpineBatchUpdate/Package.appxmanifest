@@ -8,8 +8,8 @@
 
   <Identity
     Name="29295HeartPhase.Studio.SpineBatchUpdater"
-    Publisher="CN=HeartPhase.Studio"
-    Version="0.2.11.0" />
+    Publisher="CN=C7AA69E5-A500-44A7-B2DA-9CFB7AD5EAB4"
+    Version="0.1.8.0" />
 
   <Properties>
     <DisplayName>Spine Batch Updater</DisplayName>

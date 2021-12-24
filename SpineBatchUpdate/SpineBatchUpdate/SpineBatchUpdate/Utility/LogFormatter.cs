@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpineBatchUpdate.Utility
 {
     public static class LogFormatter
     {
-        public static List<string> SpineUpdateLogFormatter(string logFile) {
+        public static List<string> SpineUpdateLogFormatter(string logFile)
+        {
             List<string> formatted = new();
             string currentCmd = string.Empty;
             string currentError = string.Empty;
@@ -23,11 +21,13 @@ namespace SpineBatchUpdate.Utility
                 string[] logs = File.ReadAllText(logFile).Split(Environment.NewLine);
                 foreach (string log in logs)
                 {
-                    if (rxCmd.IsMatch(log)) {
+                    if (rxCmd.IsMatch(log))
+                    {
                         currentCmd = log;
                     }
-                    if (rxError.IsMatch(log)) { 
-                        
+                    if (rxError.IsMatch(log))
+                    {
+
                     }
                 }
             }

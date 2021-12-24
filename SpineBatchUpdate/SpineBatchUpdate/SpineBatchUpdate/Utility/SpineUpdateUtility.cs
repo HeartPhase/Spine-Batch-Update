@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpineBatchUpdate.Utility
 {
     public static class SpineUpdateUtility
     {
 
-        public static void UpdateSpineFiles(List<string> spineFiles, string root, string export, string config, string exec) {
+        public static void UpdateSpineFiles(List<string> spineFiles, string root, string export, string config, string exec)
+        {
             List<string> commands = new();
             foreach (string spineFile in spineFiles)
             {
                 string relativePath = spineFile[root.Length..];
                 string fileName = relativePath.Split("\\").Last();
                 relativePath = relativePath[..relativePath.IndexOf(fileName)];
-                string command = "\""+ exec +"\" -i \""
+                string command = "\"" + exec + "\" -i \""
                     + spineFile
                     + "\" -o \""
                     + export + relativePath[..(relativePath.Length - 1)]
