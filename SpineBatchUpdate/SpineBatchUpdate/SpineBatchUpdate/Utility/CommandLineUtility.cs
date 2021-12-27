@@ -43,6 +43,20 @@ namespace SpineBatchUpdate.Utility
             cmd.WaitForExit();
         }
 
+        public static void RunCommand(string command, string export)
+        {
+            initCMD();
+            logFile = export + "\\temp.log";
+            logErrorFile = export + "\\temp_error.log";
+            cmd.OutputDataReceived += OutputHandler;
+            cmd.ErrorDataReceived += ErrorHandler;
+            cmd.BeginOutputReadLine();
+            cmd.BeginErrorReadLine();
+            cmd.StandardInput.WriteLine(command);
+            Debug.WriteLine(command);
+            cmd.WaitForExit();
+        }
+
         static void OutputHandler(object sender, DataReceivedEventArgs e)
         {
             WriteData(logFile, e.Data);
