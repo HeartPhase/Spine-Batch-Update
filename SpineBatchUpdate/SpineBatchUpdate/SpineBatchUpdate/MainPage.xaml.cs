@@ -80,10 +80,14 @@ namespace SpineBatchUpdate
             foreach (TreeViewNode node in treeView.SelectedNodes)
             {
                 SpineItemView item = (SpineItemView)node.Content;
-                if (!item.IsFolder) spineFilePaths.Add(item.SpineTreeItem.ItemPath);
-                string exportPath = (string.IsNullOrEmpty(item.exportPath)) ? folderPath_Export.Text : item.exportPath;
-                SpineUpdateUtility.AddUpdateConfig(item.SpineTreeItem.ItemPath, folderPath_Import.Text, exportPath, string.IsNullOrEmpty(item.exportPath),
-                    filePath_JSON.Text, exportAsSkel.IsChecked);
+                if (!item.IsFolder)
+                {
+                    spineFilePaths.Add(item.SpineTreeItem.ItemPath);
+                    string exportPath = (string.IsNullOrEmpty(item.exportPath)) ? folderPath_Export.Text : item.exportPath;
+                    SpineUpdateUtility.AddUpdateConfig(item.SpineTreeItem.ItemPath, folderPath_Import.Text, exportPath, string.IsNullOrEmpty(item.exportPath),
+                        filePath_JSON.Text, exportAsSkel.IsChecked);
+                }
+                
             }
 
             SpineUpdateUtility.ExecuteUpdate(filePath_Executable.Text, folderPath_Import.Text);
