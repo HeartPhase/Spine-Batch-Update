@@ -15,6 +15,7 @@ using SpineBatchUpdate.Utility;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using System.Collections.ObjectModel;
+using Windows.UI.Text.Core;
 
 namespace SpineBatchUpdate
 {
@@ -75,20 +76,55 @@ namespace SpineBatchUpdate
         private void ProcessAction_Click(object sender, RoutedEventArgs e) {
             logs.Text = "";
             List<string> spineFilePaths = new();
+            SpineUpdateUtility.ClearUpdateConfig();
             foreach (TreeViewNode node in treeView.SelectedNodes)
             {
                 SpineItemView item = (SpineItemView)node.Content;
                 if (!item.IsFolder) spineFilePaths.Add(item.SpineTreeItem.ItemPath);
+                string exportPath = (string.IsNullOrEmpty(item.exportPath)) ? folderPath_Export.Text : item.exportPath;
+                SpineUpdateUtility.AddUpdateConfig(item.SpineTreeItem.ItemPath, folderPath_Import.Text, exportPath, string.IsNullOrEmpty(item.exportPath),
+                    filePath_JSON.Text, exportAsSkel.IsChecked);
             }
-            SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text, filePath_Executable.Text);
+
+            SpineUpdateUtility.ExecuteUpdate(filePath_Executable.Text, folderPath_Import.Text);
+            //SpineUpdateUtility.UpdateSpineFiles(spineFilePaths, folderPath_Import.Text, folderPath_Export.Text, filePath_JSON.Text, filePath_Executable.Text);
+        }
+
+        private void RetrieveOutputPath_Click(object sender, RoutedEventArgs e)
+        {
+            logs.Text = "";
+            foreach (TreeViewNode node in treeView.SelectedNodes)
+            {
+                SpineItemView item = (SpineItemView)node.Content;
+                if (!item.IsFolder)
+                {
+                    item.exportPath = SpineUpdateUtility.GetLastOutputPath(item.SpineTreeItem.ItemPath, filePath_Executable.Text);
+                }
+            }
+            RefreshTreeView();
         }
 
         private void ExportLogs_Click(object sender, RoutedEventArgs e) {
-            string logFile = folderPath_Export.Text + "\\temp.log";
-            string logErrorFile = folderPath_Export.Text + "\\temp_error.log";
+            string logFile = folderPath_Import.Text + "\\temp.log";
+            string logErrorFile = folderPath_Import.Text + "\\temp_error.log";
             if (File.Exists(logFile))
             {
-                logs.Text = File.ReadAllText(logFile); //+ "\n Error Message \n" + File.ReadAllText(logErrorFile);
+                logs.Text = File.ReadAllText(logFile)+ "\n Error Message \n" + File.ReadAllText(logErrorFile);
+            }
+        }
+
+        private void ClearLogs_Click(object sender, RoutedEventArgs e)
+        {
+            string logFile = folderPath_Import.Text + "\\temp.log";
+            string logErrorFile = folderPath_Import.Text + "\\temp_error.log";
+            if (File.Exists(logFile))
+            {
+                File.Create(logFile).Dispose();
+            }
+
+            if (File.Exists(logErrorFile))
+            {
+                File.Create(logErrorFile).Dispose();
             }
         }
 
@@ -105,7 +141,9 @@ namespace SpineBatchUpdate
             logs.Text = File.ReadAllText(folderPath_Export.Text + "\\temp.log");
         }
 
-        private void RefreshTreeView() {
+        private void RefreshTreeView()
+        {
+            var temp = treeView.SelectedItems;
             TreeViewNode rootNode = GenerateNode(dataSource.RootFolder);
             foreach (SpineItemView item in dataSource.RootFolder.Children)
             {
@@ -115,6 +153,7 @@ namespace SpineBatchUpdate
             }
             treeView.RootNodes.Clear();
             treeView.RootNodes.Add(rootNode);
+            treeView.SelectedNodes.Clear();
         }
 
         private TreeViewNode GenerateNode(SpineItemView item) {
@@ -134,6 +173,7 @@ namespace SpineBatchUpdate
         }
 
         #endregion
+
     }
 
     public class TreeTemplateSelector : DataTemplateSelector

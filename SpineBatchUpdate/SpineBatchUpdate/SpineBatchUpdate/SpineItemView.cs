@@ -47,6 +47,8 @@ namespace SpineBatchUpdate
             get => spineTreeItem;
         }
 
+        public string exportPath;
+
         public string DisplayName { get => spineTreeItem.DisplayName; }
 
         public bool IsExpanded

@@ -43,15 +43,18 @@
         <!--#region DataTemplates-->
         <DataTemplate x:DataType="TreeViewNode" x:Key="folderTemplate">
             <StackPanel Orientation="Horizontal">
-                <Image Width="16" Source="Assets/folder.png"/>
-                <TextBlock Height="20" LineHeight="16" Padding="2" Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
+                <Image Width="30" Source="Assets/folder.png"/>
+                <TextBlock FontWeight="SemiBold" Height="20" LineHeight="16" Padding="10, 0, 0, 0" Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate x:DataType="TreeViewNode" x:Key="fileTemplate">
             <StackPanel Orientation="Horizontal">
-                <Image Width="16" Source="Assets/file.png"/>
-                <TextBlock Height="20" LineHeight="16" Padding="2" Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
+                <Image Width="30" Source="Assets/file.png"/>
+                <StackPanel Orientation="Vertical">
+                  <TextBlock FontSize="12" Height="18" LineHeight="14" Padding="2, 0, 0, 0" Text="{x:Bind ((local:SpineItemView)Content).DisplayName}" />
+                    <TextBlock FontSize="12" FontWeight="SemiLight" Height="18" LineHeight="12" Padding="4, 0, 0, 0" Text="{x:Bind ((local:SpineItemView)Content).exportPath}" />
+                </StackPanel>
             </StackPanel>
         </DataTemplate>
         <local:TreeTemplateSelector x:Key="treeTempSelector"
@@ -96,9 +99,11 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
                 <Button Grid.Column="0" x:Name="chooseFile_Button_JSON" Content="Config" Click="ChooseFile_Click_JSON" Style="{StaticResource Button_normal}"/>
                 <TextBox Grid.Column="1" x:Name="filePath_JSON"/>
+                <CheckBox Grid.Column="2" x:Name="exportAsSkel" Content="Export as .Skel"/>
             </Grid>
         </StackPanel>
         <TreeView Grid.Column="0" Grid.Row ="2" x:Name="treeView" SelectionMode="Multiple" Style="{StaticResource TreeView_main}" ItemTemplateSelector="{StaticResource treeTempSelector}">
@@ -108,10 +113,12 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" x:Name="chooseFile_Button_Executable" Content="Spine Exe" Click="ChooseFile_Click_Executable" Style="{StaticResource Button_normal}"/>
             <TextBox Grid.Column="1" x:Name="filePath_Executable" Height="24"/>
-            <Button Grid.Column="2" x:Name="processAction" Content="Start" Click="ProcessAction_Click" Style="{StaticResource Button_action}" />
+            <Button Grid.Column="2" x:Name="retrieveOutputPath" Content="Get Output" Click="RetrieveOutputPath_Click" Style="{StaticResource Button_action}"/>
+            <Button Grid.Column="3" x:Name="processAction" Content="Start" Click="ProcessAction_Click" Style="{StaticResource Button_action}" />
         </Grid>
 
         <Grid Grid.Column="1" Grid.Row ="0" Grid.RowSpan="3" x:Name="logArea" >
@@ -123,6 +130,7 @@
             <TextBox Grid.Row="1" x:Name="logs" Text="Waiting for process.." ScrollViewer.VerticalScrollBarVisibility="Auto" Style="{StaticResource TextBox_log}"/>
         </Grid>
         <StackPanel Grid.Column="1" Grid.Row ="3" x:Name="misc" Orientation="Horizontal" HorizontalAlignment="Right" Style="{StaticResource StackPanel_horizontal}">
+            <Button x:Name="clearLogs" Content="Clear Log" Click="ClearLogs_Click" Style="{StaticResource Button_normal}"/>
             <Button x:Name="exportLogs" Content="Load Log" Click="ExportLogs_Click" Style="{StaticResource Button_normal}"/>
         </StackPanel>
     </Grid>

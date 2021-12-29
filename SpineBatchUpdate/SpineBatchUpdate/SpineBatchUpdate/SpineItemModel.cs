@@ -14,7 +14,7 @@ namespace SpineBatchUpdate
         public List<SpineItem> Children { get; }
         public bool IsChecked { get; set; }
         public bool IsSelected { get; set; }
-        public string DisplayName { get; }
+        public string DisplayName { get;}
         public bool IsFolder { get; set; }
         public string ItemPath { get; set; }
 
