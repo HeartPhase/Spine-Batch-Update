@@ -62,12 +62,31 @@ namespace SpineBatchUpdate.Utility
 
         public static void ExecuteUpdate(string exec, string import)
         {
+            List<string> cmdList = new List<string>();
             string commandHead = (string.IsNullOrEmpty(exec)) ? "Spine" : "\"" + exec + "\"";
+            string originalCmdHead = commandHead;
+            int cmdLength = 0;
             foreach (var command in commands)
             {
+                cmdLength += command.Length;
+                if (cmdLength >= 8000) // max cmd length in cmd is 8191
+                {
+                    cmdList.Add(commandHead);
+                    commandHead = originalCmdHead;
+                    cmdLength = 0;
+                }
                 commandHead += command;
             }
-            CommandLineUtility.RunCommand(new List<string>() {commandHead, "exit"}, import);
+
+            if (cmdList.Count > 0)
+            {
+                cmdList.Add("exit");
+                CommandLineUtility.RunCommand(cmdList, import);
+            }
+            else
+            {
+                CommandLineUtility.RunCommand(new List<string>() { commandHead, "exit" }, import);
+            }
         }
 
         public static void UpdateSpineFiles(List<string> spineFiles, string root, string export, string config, string exec)
